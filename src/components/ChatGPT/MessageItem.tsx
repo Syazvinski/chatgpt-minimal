@@ -1,10 +1,8 @@
-import React from 'react'
-
-import MarkdownIt from 'markdown-it'
-import mdHighlight from 'markdown-it-highlightjs'
-import mdKatex from 'markdown-it-katex'
-
-import { ChatMessageItemProps } from './interface'
+import React, { useEffect, useState } from 'react';
+import MarkdownIt from 'markdown-it';
+import mdHighlight from 'markdown-it-highlightjs';
+import mdKatex from 'markdown-it-katex';
+import { ChatMessageItemProps } from './interface';
 
 const md = MarkdownIt({ html: true }).use(mdKatex).use(mdHighlight)
 const fence = md.renderer.rules.fence!
@@ -23,7 +21,56 @@ md.renderer.rules.fence = (...args) => {
 }
 
 const MessageItem = (props: ChatMessageItemProps) => {
-  const { message } = props
+  const { message } = props;
+
+  const [imageUrl, setImageUrl] = useState("");
+  const [apiCalled, setApiCalled] = useState(false);
+
+  let displayMessage = message.content;
+  const indexOfStart = displayMessage.indexOf("FINAL_PRODUCT_DATA");
+
+  if (indexOfStart !== -1) {
+    displayMessage = displayMessage.slice(0, indexOfStart);
+  }
+
+  const shouldDisplayImage =
+    message.content.includes("END_PRODUCT_DATA") && indexOfStart !== -1;
+  const isGeneratingMap =
+    indexOfStart !== -1 && !shouldDisplayImage;
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      let jsonData = message.content.slice(
+        indexOfStart + 18,
+        message.content.indexOf("END_PRODUCT_DATA")
+      ).trim();
+
+      // If first and last character are quotes, remove them
+      if (jsonData.startsWith('"') && jsonData.endsWith('"')) {
+        jsonData = jsonData.slice(1, -1);
+      }
+
+      try {
+        const response = await fetch('http://localhost:5000/draw_text', {
+          method: 'POST',
+          body: JSON.stringify(jsonData),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const blob = await response.blob();
+        setImageUrl(URL.createObjectURL(blob));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    // When END_PRODUCT_DATA is present and the API hasn't been called yet, then fetch the image
+    if (shouldDisplayImage && !apiCalled) {
+      fetchImage();
+      setApiCalled(true); // Set to true to ensure API is only called once
+    }
+  }, [message.content, shouldDisplayImage, indexOfStart, apiCalled]);
 
   return (
     <div className="message-item">
@@ -31,10 +78,20 @@ const MessageItem = (props: ChatMessageItemProps) => {
         <div className="avatar">
           <span className={message.role}></span>
         </div>
-        <div className="message" dangerouslySetInnerHTML={{ __html: md.render(message.content) }} />
+        <div className="message" dangerouslySetInnerHTML={{ __html: md.render(displayMessage) }} />
+        {isGeneratingMap && <p>generating map...</p>}
+      </div>
+      <div>
+        {shouldDisplayImage && imageUrl && (
+          <img
+            src={imageUrl}
+            alt="Final Product"
+            style={{ width: "100%", height: "auto" }}
+          />
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default MessageItem
+export default MessageItem;
