@@ -47,6 +47,7 @@ const handler = async (req: Request): Promise<Response> => {
       }
       apiUrl = `${apiBaseUrl}/v1/chat/completions`
       apiKey = process.env.OPENAI_API_KEY || ''
+      console.log(process.env.OPENAI_API_BASE_URL)
       model = 'gpt-4' 
       // functions = [{name:'generate_store_map', description: 'used to generate the image that contains each product and a map to guide the customer through the store. should only be used once the customer has confirmed thier product list.', parameters:'test'}]
     }
