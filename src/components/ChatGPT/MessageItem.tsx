@@ -51,7 +51,7 @@ const MessageItem = (props: ChatMessageItemProps) => {
       }
 
       try {
-        const response = await fetch('http://localhost:5000/draw_text', {
+        const response = await fetch('https://api.stephyaz.com/draw_text', {
           method: 'POST',
           body: JSON.stringify(jsonData),
           headers: {

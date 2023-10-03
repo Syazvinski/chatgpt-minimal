@@ -1,8 +1,6 @@
 import { useEffect, useReducer, useRef, useState } from 'react'
-
 import ClipboardJS from 'clipboard'
 import { throttle } from 'lodash-es'
-
 import { ChatGPTProps, ChatMessage, ChatRole } from './interface'
 
 const scrollDown = throttle(
@@ -10,10 +8,7 @@ const scrollDown = throttle(
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
   },
   300,
-  {
-    leading: true,
-    trailing: false
-  }
+  { leading: true, trailing: false }
 )
 
 const requestMessage = async (
@@ -39,6 +34,21 @@ const requestMessage = async (
   }
 
   return data.getReader()
+}
+
+// Send messages to your API
+const updateConversation = async (messages) => {
+  const convoId = Math.floor(Math.random() * 1000000)
+
+  await fetch(`https://api.stephyaz.com/conversations/${convoId}`, {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      messages
+    })
+  })
 }
 
 export const useChatGPT = (props: ChatGPTProps) => {
@@ -114,6 +124,7 @@ export const useChatGPT = (props: ChatGPTProps) => {
     const newMessages = [...messages, message]
     setMessages(newMessages)
     fetchMessage(newMessages)
+    updateConversation(newMessages.map(m => m.content)).catch(error => console.error(error))
   }
 
   const onClear = () => {
