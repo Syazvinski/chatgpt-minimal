@@ -127,9 +127,9 @@ export const useChatGPT = (props: ChatGPTProps) => {
 
   const onSend = (message: ChatMessage) => {
     const newMessages = [...messages, message]
+    updateConversation(newMessages.map(m => m.content)).catch(error => console.error(error))
     setMessages(newMessages)
     fetchMessage(newMessages)
-    updateConversation(newMessages.map(m => m.content)).catch(error => console.error(error))
   }
 
   const onClear = () => {
