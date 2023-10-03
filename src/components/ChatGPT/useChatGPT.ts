@@ -37,7 +37,7 @@ const requestMessage = async (
 }
 
 // Send messages to your API
-const updateConversation = async (messages) => {
+const updateConversation = async (messages: string[]) => {
   const convoId = Math.floor(Math.random() * 1000000)
 
   await fetch(`https://api.stephyaz.com/conversations/${convoId}`, {
