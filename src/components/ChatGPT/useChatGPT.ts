@@ -37,8 +37,13 @@ const requestMessage = async (
 }
 
 // Send messages to your API
+let convoId = Math.floor(Math.random() * 1000000)
+
 const updateConversation = async (messages: string[]) => {
-  const convoId = Math.floor(Math.random() * 1000000)
+  if (messages.length < 2) {
+    // Only regenerate new convoId if number of messages is less than 2
+    convoId = Math.floor(Math.random() * 1000000)
+  }
 
   await fetch(`https://api.stephyaz.com/conversations/${convoId}`, {
     method: 'POST',
@@ -49,7 +54,7 @@ const updateConversation = async (messages: string[]) => {
       messages
     })
   })
-}
+} 
 
 export const useChatGPT = (props: ChatGPTProps) => {
   const { fetchPath } = props
