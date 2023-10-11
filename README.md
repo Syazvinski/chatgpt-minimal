@@ -1,95 +1,24 @@
-# ChatGPT Minimal
+# Build Buddy Project
 
-English | [简体中文](./README.zh-CN.md)
+This project has been forked from the frontend of [chatgpt-minimal](https://github.com/blrchen/chatgpt-minimal), and the instructions for how to use the frontend can be found on the original repository.
 
-## Demo
+## Project Overview
 
-Visit [ChatGPT Minimal Demo Site](https://chatgpt-minimal.vercel.app)
+This project is a messily built bot which serves as an improvised store assistance. A backend API through Flask takes in a list of products and returns an image of the store. 
 
-## Features
+Each conversation is logged and stored using an SQL Alchemy database. Whenever a user sends a message, the chat log is saved. Included in this, is a functionality that allows the GPT API to pretend to be Build Bot and generate fake data.
 
-ChatGPT Minimal is a lightweight chatbot built using Next.js and the OpenAI Streaming API for the GPT-3.5 model. It supports both OpenAI and Azure OpenAI accounts.
+In a bit unorthodox method, the bot gives JSON to users once they confirm their list. This communication is prefixed with "FINAL_PRODUCT_DATA" and concludes with "END_PRODUCT_DATA". The frontend listens for these phrases in each response, and once both these phrases are received, assumes that whatever lies between these tags is JSON. This data is then sent in plain text to the API for further parsing.
 
-Components:
-- Next.js v13
-- OpenAI Streaming API (GPT-3.5 model, gpt-3.5-turbo)
-- API Routes
-- Chatbot UI with React and Ant Design
+This project is very much a quick-fix system and for a more professional setup, it is recommended to utilise "Functions" provided by the GPT API for intelligent API calls.
 
-![demo](./docs/images/demo.jpg)
+## Future Updates
 
-For a full-featured ChatGPT UI, visit [ChatGPT Lite](https://github.com/blrchen/chatgpt-lite).
+In due course, the GPT API will receive a multimodal update which will enable GPT to handle image processing. An Open AI API key is needed for this functionality to be used.
 
-## Prerequisites
+## Additional Information
 
-You need an OpenAI or Azure OpenAI account.
+The API has an endpoint `(/analytics)`. This endpoint delivers an HTML page that displays all the conversations logged through the database.
 
-## Deployment
-
-Refer to the [Environment Variables](#environment-variables) section for required environment variables.
-
-### Deploy on Vercel
-
-Click the button below to deploy on Vercel:
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fblrchen%2Fchatgpt-minimal&project-name=chatgpt-minimal&framework=nextjs&repository-name=chatgpt-minimal)
-
-### Deploy with Docker
-
-For OpenAI account users:
-
-```
-docker run -d -p 3000:3000 \
-   -e OPENAI_API_KEY="<REPLACE-ME>" \
-   blrchen/chatgpt-minimal
-```
-
-For Azure OpenAI account users:
-
-```
-docker run -d -p 3000:3000 \
-   -e AZURE_OPENAI_API_BASE_URL="<REPLACE-ME>" \
-   -e AZURE_OPENAI_API_KEY="<REPLACE-ME>" \
-   -e AZURE_OPENAI_DEPLOYMENT="<REPLACE-ME>" \
-   blrchen/chatgpt-minimal
-```
-
-## Development
-
-### Running Locally
-
-1. Install NodeJS 18.
-2. Clone the repository.
-3. Install dependencies with `npm install`.
-4. Copy `.env.example` to `.env.local` and modify environment variables accordingly.
-5. Start the application using `npm run dev`.
-6. Visit `http://localhost:3000` in your browser.
-
-### Running Locally with Docker
-
-1. Clone the repository and navigate to the root directory.
-2. Update the `OPENAI_API_KEY` environment variable in the `docker-compose.yml` file.
-3. Build the application using `docker-compose build .`.
-4. Start the application by running `docker-compose up -d`.
-
-## Environment Variables
-
-Required environment variables:
-
-For OpenAI account:
-
-| Name                | Description                                                                                             | Default Value            |
-|---------------------|---------------------------------------------------------------------------------------------------------|--------------------------|
-| OPENAI_API_BASE_URL | Use if you intend to use a reverse proxy for `api.openai.com`.                                          | `https://api.openai.com` |
-| OPENAI_API_KEY      | Secret key string obtained from the [OpenAI API website](https://platform.openai.com/account/api-keys). |
-
-For Azure OpenAI account:
-
-| Name                      | Description                                    |
-|---------------------------|------------------------------------------------|
-| AZURE_OPENAI_API_BASE_URL | Endpoint (e.g., https://xxx.openai.azure.com). |
-| AZURE_OPENAI_API_KEY      | Key                                            |
-| AZURE_OPENAI_DEPLOYMENT   | Model deployment name                          |
-
-## Contribution
-
-We welcome PRs of all sizes.
+## Disclaimer
+Remember, I jerry-rigged this whole system together in three days, so my main focus was not on a proper implementation. Hopefully, this gives you a good idea of what was done and points you in the right direction should you want to set this up as a corporate-level system. The documentation and resources are out there to help make the implementation process a lot cleaner and professional.

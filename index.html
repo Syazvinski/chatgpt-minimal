@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Conversations</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+#conversations {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.conversation {
+    background-color: #fff;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    padding: 1rem;
+    max-height: 500px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.conversation.updated {
+    animation: pulsate 1.5s infinite;
+}
+
+.message {
+    background-color: #eee;
+    padding: 1rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+}
+
+.message:nth-child(even) {
+    background-color: #ddd;
+    margin-left: auto;
+}
+
+@keyframes pulsate {
+    0% {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #90ee90;
+    }
+    100% {
+        border-color: transparent;
+    }
+}
+
+h2 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1.2rem;
+}
+    </style>
+</head>
+<body>
+    <div id="conversations"></div>
+    <script src="conversations.js"></script>
+</body>
+</html>
